@@ -1,1 +1,424 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Shanties Dumpster Fire</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            padding: 20px;
+            font-family: 'Monospace', monospace;
+            background-color: #e5e5e5;
+        }
+
+        header {
+            background-color: #990000;
+            padding: 20px;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        nav li {
+            display: inline-block;
+            margin-right: 20px;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        nav a:hover {
+            border-bottom: 2px solid #ffffff;
+        }
+
+        section {
+            margin: auto; /* Center the comment container */
+            width: 80%; /* Adjust the width to occupy more of the screen */
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            border: 1px solid #ddd; /* Add a border to create a division */
+            margin-bottom: 20px; /* Add some space between sections */
+        }
+
+        footer {
+            padding: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .score-container {
+            margin: auto; /* Center the comment container */
+            width: 70%;
+            position: relative;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        /* Responsive Video Container */
+        .video-container {
+            margin: auto; /* Center the comment container */
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: visible; /* Change this line from overflow: hidden; to overflow: visible; */
+            margin-bottom: 20px;
+        }
+
+        .video-container iframe {
+            margin: auto; /* Center the comment container */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Simplified Audio Controls */
+        audio {
+            width: 100%;
+        }
+
+        /* Comment Styling */
+        .comment-container {
+            margin: auto; /* Center the comment container */
+            width: 90%; /* Adjust the width to occupy more of the screen */
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #ffffff;
+        }
+
+        /* Add new style for comments */
+        .comment {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .event {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+
+        /* Lyrics Styling */
+        .lyrics-container {
+            margin: auto; /* Center the comment container */
+            width: 70%; /* Adjust the width to occupy more of the screen */
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f3f3f3;
+        }
+
+        .lyrics {
+            font-style: italic;
+            color: #333;
+        }
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .btn {
+            border: 2px solid gray;
+            color: gray;
+            background-color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🚀 Ahoy, Sky Shanty Seeker! Welcome to the Melodic Skies Hub 🌌🎶</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#recordings">Ear Candy</a></li>
+                <li><a href="#scores">Scoreland</a></li>
+                <li><a href="#events">Harmony Happenings</a></li>
+                <li><a href="#join">Join the Jam</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section id="home">
+        <h2>Discover the magic world of Sky Shanties 🌈🎵</h2>
+        <p>Explore field recordings, video recordings, annotated scores, and join discussions about the music.</p>
+    </section>
+
+    <section id="recordings">
+        <h2>Audio Recordings</h2>
+        <div class="section">
+            <h3>Altitude crew</h3>
+            <!-- User-generated content -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconarchive/robot-avatar/256/White-1-Robot-Avatar-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">Traveler123</h5>
+                <p>Just stumbled upon "Altitude Crew" during my flight from New York to London on Flight XYZ123 on October 10, 2023. Captured the essence of the skies at 30,000 feet! 🌌✈️</p>
+            </div>
+
+            <!-- Audio Player -->
+            <!-- <audio controls>
+                <source src="/Users/lcros/Documents/ForumPage/data/356.mp3" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio> -->
+            <iframe src="https://drive.google.com/file/d/1GlIEq_h4n2S8RxuQfpJo78wstdi8c-sI/preview" width="100%" height="60" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            <div class="lyrics-container">
+                <h3>Lyrics for Altitude Crew</h3>
+                <p class="lyrics">
+                    We're altitude crew in the blue expanse,<br>
+                    cockpit to cabin, side by side. <br>
+                    Uniform attire, serving with a smile. <br>
+                    <br>
+                    From takeoff to landing, mile after mile. <br>
+                    We're a family through the sky. <br>
+                    Through delays and struggles, <br>
+                    we'll always abide. <br>
+                    <br>
+                    Altitude crew (soaring through the sky), <br>
+                    together we soar (making loved ones prowd). <br>
+                    We're altitude crew.
+                </p>
+            </div>
+
+            <!-- Additional comments -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/elegantthemes/beautiful-flat/256/Blimp-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">ShantyFan456</h5>
+                <p>Curious, what device did you use to capture it?</p>
+            </div>
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconka/easter-egg-bunny/256/blue-angel-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">AviatorMelody</h5>
+                <p>I've also heard it being called soaring through the sky. This shanty echoes the majesty of the open skies. Heard it first on a flight from Paris to Tokyo - the perfect soundtrack for a journey among the clouds!</p>
+            </div>
+
+            <h3>Flight of the Pioneers</h3>
+            <!-- User-generated content -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconka/easter-egg-bunny/256/blue-angel-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">AviatorMelody</h5>
+                <p>Just whipped out my phone on the plane and recorded a spontaneous rendition of "Flight of the Pioneers" 🎸✈️ #SkyHighMelodies</p>
+            </div>
+            <iframe src="https://drive.google.com/file/d/1KpjKXFcQBeYpfca_BbIHCAOwfJYI7kzn/preview" width="100%" height="60" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            <div class="lyrics-container">
+                <h3>Lyrics for Flight of the Pioneers</h3>
+                <p class="lyrics">
+                    Down in the fields where the wild winds blow <br>
+                    There's a melody, the aviators know (ooh-yeah) <br>
+                    In their hearts they hear the call <br>
+                    Of the flight that's bound to rise and fall (oh-oh) <br>
+                    With every step, they pave the way <br>
+                    <br>
+                    Oh, the Flight of the Pioneers (pioneers) <br>
+                    Guided by the rhythm in their ears (in their ears) <br>
+                    Their boots stompin', hearts thumpin' (thumpin') <br>
+                    As they soar, into the unknown (unknown) <br>
+                    Oh-oh-oh-oh-oh-oh-oh (oh-oh-oh-oh-oh-oh-oh) <br>
+                    Oh-oh-oh-oh-oh-oh-oh (oh-oh-oh-oh-oh-oh-oh)
+                </p>
+            </div>
+
+            <!-- Additional comments -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/elegantthemes/beautiful-flat/256/Blimp-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">ShantyFan456</h5>
+                <p>That guitar deserves its own frequent flyer miles after that performance! 🎸✨</p>
+            </div>
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconarchive/incognito-animals/256/Bison-Avatar-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">AltitudeHarborer63</h5>
+                <p>In-flight entertainment level: Upgraded! 🚀🎤</p>
+            </div>
+            <div class="upload-btn-wrapper">
+                <button class="btn">Share your audio</button>
+                <input type="file" name="myfile" />
+            </div>
+        </div>
+        <h2>Video Recordings</h2>
+        <div class="section">
+            <!-- User-generated content -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/hopstarter/bioman/256/Bioman-Avatar-2-Green-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">AeroPilot7</h5>
+                <p>Stumbled upon this "Wings of the Sky" video. This gem was captured during a surprise mid-flight shanty session with the crew! 🛫 Found it in the archives of our in-flight entertainment system. Pure aviation magic! ✈️🎤</p>
+            </div>
+            <!-- Styled video recording box -->
+            <div class="video-container">
+                <h3>Wings of the Sky</h3>
+
+                <!-- Video iframe -->
+                <iframe src="https://drive.google.com/file/d/1H0GWz3Hxvyp2UvVK0B90f68tVc1GQzUd/preview" width="100%" height="200" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            </div>
+            <div class="lyrics-container">
+                <h3>Lyrics for Wings of the Sky</h3>
+                <p class="lyrics">
+                    Bound for the heavens wide and high, <br>
+                    steel wings soar, touch the sky. <br>
+                    Through clouds we glide and smile. <br>
+                    <br>
+                    Over horizons dreams ascend, <br>
+                    steel feathers catching sun. <br>
+                    Through storms we press so brave. <br>
+                    <br>
+                    Raise your voices, spirits take flight (raise your voices). <br>
+                    Captains of air day and night (raise them to the sky). <br>
+                    Raise your voices, spirits take flight (raise your voices). <br>
+                    Raise them to the sky.
+                </p>
+            </div>
+            <!-- Additional comments -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconarchive/incognito-animals/256/Bison-Avatar-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">AltitudeHarborer63</h5>
+                <p>This video inspired me to learn a new shanty. Thanks for sharing!</p>
+            </div>
+            <div class="upload-btn-wrapper">
+                <button class="btn">Share your video</button>
+                <input type="file" name="myfile" />
+            </div>
+
+            <!-- User-generated content -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconarchive/robot-avatar/256/White-1-Robot-Avatar-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">StarTunesmith</h5>
+                <p>This lovely flight attendant surprised us with a beautiful rendition of "Into the Blue" during our long flight from New York to Paris, turning a routine journey into a memorable experience; apologies for the iffy sound quality, blame it on airplane acoustics and my potato of a phone microphone.</p>
+            </div>
+            <!-- Styled video recording box -->
+            <div class="video-container">
+                <h3>Into the blue</h3>
+
+                <!-- Video iframe -->
+                <iframe src="https://drive.google.com/file/d/1ksuehYQwyj-8ztEGAq2wjiRYWlbKODFs/preview" width="100%" height="200" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            </div>
+            <div class="lyrics-container">
+                <h3>Lyrics for Into the blue</h3>
+                <p class="lyrics">
+                    Into the blue, we venture each day, <br>
+                    Through the wild open yonder, where the skies meet the gray. <br>
+                    With courage and grace, we'll reach for the sun, <br>
+                    In the cockpit we trust, for our journey's begun. <br>
+                    <br>
+                    Into the blue, through the turbulence and light, <br>
+                    We'll navigate boldly, in the day and the night. <br>
+                    With passengers' dreams and their fears set aside, <br>
+                    Into the blue, with the wind as our guide. <br>
+                    <br>
+                    From the cityscapes below, to the stars shining bright, <br>
+                    Through the canvas of clouds, we'll take flight after flight. <br>
+                    With our wings in the wind, we'll forever abide, <br>
+                    Into the blue, on this journey we ride.
+                </p>
+            </div>
+            <!-- Additional comments -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconarchive/incognito-animals/256/Bison-Avatar-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">AltitudeHarborer63</h5>
+                <p>Wow, that's amazing! I wish I had been on that flight too.</p>
+            </div>
+            <div class="upload-btn-wrapper">
+                <button class="btn">Share your video</button>
+                <input type="file" name="myfile" />
+            </div>
+        </div>
+    </section>
+
+    <section id="scores">
+        <h2>Annotated Scores</h2>
+        <div class="score-container">
+            <!-- User-generated content -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/hopstarter/bioman/256/Bioman-Avatar-2-Green-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">AeroPilot7</h5>
+                <p>I took the time to write the score for "Wings of the Sky". Hope you guys enjoy it!</p>
+            </div>
+
+            <!-- Score iframe -->
+            <iframe width="100%" height="450" src="https://musescore.com/user/55340703/scores/12872314/embed" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+                
+            <!-- Additional comments -->
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/hopstarter/halloween-avatar/256/Devil-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">MelodyMaster88</h5>
+                <p>This piece is a masterpiece! Thanks for sharing.</p>
+            </div>
+            <div class="comment">
+                <img src="https://icons.iconarchive.com/icons/iconarchive/robot-avatar/256/White-1-Robot-Avatar-icon.png" class="avatar" alt="User Avatar">
+                <h5 class="mt-0">StarTunesmith</h5>
+                <p>Just transposed my version to mimic the enchanting colors of the Northern Lights. Starting in the deep blues and greens, then rising to the vibrant reds and purples. A musical journey through the celestial palette!</p>
+            </div>
+            <div class="upload-btn-wrapper">
+                <button class="btn">Share your score</button>
+                <input type="file" name="myfile" />
+            </div>
+        </div>
+    </section>
+
+    <section id="events">
+        <h2>Upcoming events</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Styled event box -->
+                <div class="event">
+                    <h3>Sky Soiree at Central Park</h3>
+                    <p>Date: January 1, 2024</p>
+                    <p>Time: 7:00 PM - 10:00 PM</p>
+                    <p>Location: Central Park, New York</p>
+                    <p>Description: Join us for a lively gathering at City Park. Bring your shanties and instruments!</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Styled event box -->
+                <div class="event">
+                    <h3>Harbor Harmony: Shanties by the Water</h3>
+                    <p>Date: February 15, 2024</p>
+                    <p>Time: 6:30 PM - 9:30 PM</p>
+                    <p>Location: Waterfront Pavilion, San Francisco</p>
+                    <p>Description: An evening of sea shanties by the waterfront. Food, drinks, and good company!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="join">
+        <h2>Join the Community</h2>
+        <p>If you're already a member, <a href="#login">log in</a>. If not, <a href="#signup">sign up</a> for ✨free✨!</p>
+    </section>
+
+    <section id="comments" class="comment-container">
