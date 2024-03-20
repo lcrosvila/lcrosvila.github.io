@@ -1,228 +1,175 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scatter Plot with Audio Playback</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-</head>
-<body>
-    <div id="scatter-plot"></div>
-    <audio id="audio-player" controls style="display:none;"></audio>
-    <script>
-        $(document).ready(function(){
-            var scatterData = [];  // Scatter plot data
-            // var fileIdMap = {
-            //     '1JacH0d-tEC_UDx5s114Rs_r2NqF-l0IX': '../data/boomy/metadata/ED_anchor.json',
-            //     '16gSHjgYWz-C-3fMdC_N-3AZniREeRIfv': '../data/boomy/metadata/ED_sample1.json',
-            //     '12-FgHlvRiHb0VAzj5eVP01uqPkdVmjwH': '../data/boomy/metadata/ED_sample2.json',
-            //     '1VzXeEPZ_qDJ5qL5pse9103AtYBvhbCmR': '../data/boomy/metadata/GG_anchor.json',
-            //     '1Z-x_HEo7wAXIycGwDRmF2XBaZGhDhrf9': '../data/boomy/metadata/GG_sample1.json',
-            //     '1zNk9RxioDM46wA2PTvnYf6jELcmcYH-V': '../data/boomy/metadata/GG_sample2.json',
-            //     '1-HtBSBRBm3Z8FLjej4fxk5isSL63G9Q9': '../data/boomy/metadata/Kaisa_18062622.json',
-            //     '15vkXohTNQFYLnjLyb6eBY81DC8kkMEAM': '../data/boomy/metadata/Kaisa_18062623.json',
-            //     '1Gj8gGk8d14DlBMmt5yX_gxqWEb06vgwR': '../data/boomy/metadata/Kaisa_18073874.json',
-            //     '1M4ThevL10Ro4Bz8NInFYyT37UCWdJIEf': '../data/boomy/metadata/Kaisa_18074756.json',
-            //     '1iAiKN_6rm_DepBAcOPFyp3A7qfyHlZqO': '../data/boomy/metadata/Kaisa_18074876.json',
-            //     '1Ohl3DjkCyKDWZaQSc2RX-suAGZzJB3Vu': '../data/boomy/metadata/Kaisa_18089951.json',
-            //     '1mCcAXk0p-HbAW2AbxNysX3n9LGkMhabC': '../data/boomy/metadata/Kaisa_18089977.json',
-            //     '1SLCFaLAKB6q7g2IpHPbBKKydFwICHCr6': '../data/boomy/metadata/Kaisa_18089996.json',
-            //     '1jzd-XefrjXSpvUYLMw5vRyn7JlP8e52l': '../data/boomy/metadata/Kaisa_18090100.json',
-            //     '1MI4rwsiGoxWyI82b10ciTxv5LNg0DOyB': '../data/boomy/metadata/Kaisa_18090105.json',
-            //     '12W4QCkqdvMhtuV6cSMJnCQZUW3W7dFwY': '../data/boomy/metadata/Kaisa_18090121.json',
-            //     '18yF8nDAyTiN3_u_o21S63w0aQshBMiGt': '../data/boomy/metadata/Kaisa_18090157.json',
-            //     '1KpHejsFXpAUTz5IpGjZ_aalFYOPXmRPO': '../data/boomy/metadata/Kaisa_18100235.json',
-            //     '1Ff6JWyRJGvP6c0gPV6wgrNk98nsRPJH3': '../data/boomy/metadata/Kaisa_18190896.json',
-            //     '1YVB7_4RxrDSz_Z0aBE39dWLwF86wPXml': '../data/boomy/metadata/Kaisa_18190910.json',
-            //     '1nmYtBy_QtxcVOATpHWvWgjNw9eaYdmOg': '../data/boomy/metadata/Kaisa_18190911.json',
-            //     '1pqNAnZI76gdgVND1A3FwUQjBc4LpgMmD': '../data/boomy/metadata/Kaisa_18190939.json',
-            //     '1TMQz93G2Mhv9Xdx7M_kfv68edJxSJd-7': '../data/boomy/metadata/Kaisa_18190944.json',
-            //     '1l1mgtAQ52wHMISXqBjF6qUmNzxzIXGmm': '../data/boomy/metadata/Kaisa_18190947.json',
-            //     '1Pv_Pf34eiGqYJAPoXZkaDAbf-MrOzez1': '../data/boomy/metadata/Kaisa_18218977.json',
-            //     '1wARDXSS17nZtk4v4tag7LHLN3xqIB77X': '../data/boomy/metadata/Kaisa_18219002.json',
-            //     '1NRGLb0bbQh8lOIpYg4vikguAZGMhCTI9': '../data/boomy/metadata/Kaisa_18219005.json',
-            //     '1TW4V8RCrEzJMTEGniX63E_gHEzV0IrC3': '../data/boomy/metadata/Kaisa_18219022.json',
-            //     '1cEiIbCkM1ImbF4nQ_viH2vwvwRuCCkRq': '../data/boomy/metadata/Kaisa_18219023.json',
-            //     '1PdwzU-IYxUnjgKDmD4NWf7MqGktITNFJ': '../data/boomy/metadata/Kaisa_18883550.json',
-            //     '1wE4sNmR_IUUDUi7novatM27lINwzeBqc': '../data/boomy/metadata/Kaisa_18883863.json',
-            //     '1t2rkxwDlbrN-3XMYn0PeHDldGorTGGVR': '../data/boomy/metadata/Kaisa_18883878.json',
-            //     '1IDTOMnNA9_iJTo-vk5FeFqfXigDOfNKH': '../data/boomy/metadata/Kaisa_18883885.json',
-            //     '1IhtTtK1o2mMm0A8PuebUTMVUqAnp_cgE': '../data/boomy/metadata/Kaisa_18883888.json',
-            //     '1a6tRJzBl_gsBPf97V1iKgStHcVjNZ9G2': '../data/boomy/metadata/Kaisa_18883899.json',
-            //     '19Ig8uG0ftjG28Wlsmj6zAAQwyYVJQmex': '../data/boomy/metadata/Kaisa_18883906.json',
-            //     '1YOJJhWAjgrE1nhRV8puJWEiGkTsG8hqB': '../data/boomy/metadata/Kaisa_18883924.json',
-            //     '1XSms8ufTShP0VSTUPWC2sBD5XBihGOkw': '../data/boomy/metadata/Kaisa_18884479.json',
-            //     '1Qtj1yG7yYNfpWtCG-3UHTxGxsWBIEwdN': '../data/boomy/metadata/Kaisa_18884484.json',
-            //     '1e525oiKKTTBmC1Wn2X-34-u574LorlPm': '../data/boomy/metadata/Kaisa_18884486.json',
-            //     '1WLbvtTxmVs1Awszk-62YA_vuMJdH1fq_': '../data/boomy/metadata/Kaisa_18884491.json',
-            //     '1FlvqCb86YEv3NmPNUk-hMD4rfs9A6pY4': '../data/boomy/metadata/RB_anchor.json',
-            //     '1t5_KxAgmW_UN01gUPdYoR5jFEwgjGPU4': '../data/boomy/metadata/RB_sample1.json',
-            //     '1I67xvHLPI_1R6xXpWSkBhoqxgHiy1JuR': '../data/boomy/metadata/RB_sample2.json',
-            //     '1JacH0d-tEC_UDx5s114Rs_r2NqF-l0IX': '../data/boomy/metadata/ED_anchor.json',
-            //     '16gSHjgYWz-C-3fMdC_N-3AZniREeRIfv': '../data/boomy/metadata/ED_sample1.json',
-            //     '12-FgHlvRiHb0VAzj5eVP01uqPkdVmjwH': '../data/boomy/metadata/ED_sample2.json',
-            //     '1VzXeEPZ_qDJ5qL5pse9103AtYBvhbCmR': '../data/boomy/metadata/GG_anchor.json',
-            //     '1Z-x_HEo7wAXIycGwDRmF2XBaZGhDhrf9': '../data/boomy/metadata/GG_sample1.json',
-            //     '1zNk9RxioDM46wA2PTvnYf6jELcmcYH-V': '../data/boomy/metadata/GG_sample2.json',
-            //     '1-HtBSBRBm3Z8FLjej4fxk5isSL63G9Q9': '../data/boomy/metadata/Kaisa_18062622.json',
-            //     '15vkXohTNQFYLnjLyb6eBY81DC8kkMEAM': '../data/boomy/metadata/Kaisa_18062623.json',
-            //     '1Gj8gGk8d14DlBMmt5yX_gxqWEb06vgwR': '../data/boomy/metadata/Kaisa_18073874.json',
-            //     '1M4ThevL10Ro4Bz8NInFYyT37UCWdJIEf': '../data/boomy/metadata/Kaisa_18074756.json',
-            //     '1iAiKN_6rm_DepBAcOPFyp3A7qfyHlZqO': '../data/boomy/metadata/Kaisa_18074876.json',
-            //     '1Ohl3DjkCyKDWZaQSc2RX-suAGZzJB3Vu': '../data/boomy/metadata/Kaisa_18089951.json',
-            //     '1mCcAXk0p-HbAW2AbxNysX3n9LGkMhabC': '../data/boomy/metadata/Kaisa_18089977.json',
-            //     '1SLCFaLAKB6q7g2IpHPbBKKydFwICHCr6': '../data/boomy/metadata/Kaisa_18089996.json',
-            //     '1jzd-XefrjXSpvUYLMw5vRyn7JlP8e52l': '../data/boomy/metadata/Kaisa_18090100.json',
-            //     '1MI4rwsiGoxWyI82b10ciTxv5LNg0DOyB': '../data/boomy/metadata/Kaisa_18090105.json',
-            //     '12W4QCkqdvMhtuV6cSMJnCQZUW3W7dFwY': '../data/boomy/metadata/Kaisa_18090121.json',
-            //     '18yF8nDAyTiN3_u_o21S63w0aQshBMiGt': '../data/boomy/metadata/Kaisa_18090157.json',
-            //     '1KpHejsFXpAUTz5IpGjZ_aalFYOPXmRPO': '../data/boomy/metadata/Kaisa_18100235.json',
-            //     '1Ff6JWyRJGvP6c0gPV6wgrNk98nsRPJH3': '../data/boomy/metadata/Kaisa_18190896.json',
-            //     '1YVB7_4RxrDSz_Z0aBE39dWLwF86wPXml': '../data/boomy/metadata/Kaisa_18190910.json',
-            //     '1nmYtBy_QtxcVOATpHWvWgjNw9eaYdmOg': '../data/boomy/metadata/Kaisa_18190911.json',
-            //     '1pqNAnZI76gdgVND1A3FwUQjBc4LpgMmD': '../data/boomy/metadata/Kaisa_18190939.json',
-            //     '1TMQz93G2Mhv9Xdx7M_kfv68edJxSJd-7': '../data/boomy/metadata/Kaisa_18190944.json',
-            //     '1l1mgtAQ52wHMISXqBjF6qUmNzxzIXGmm': '../data/boomy/metadata/Kaisa_18190947.json',
-            //     '1Pv_Pf34eiGqYJAPoXZkaDAbf-MrOzez1': '../data/boomy/metadata/Kaisa_18218977.json',
-            //     '1wARDXSS17nZtk4v4tag7LHLN3xqIB77X': '../data/boomy/metadata/Kaisa_18219002.json',
-            //     '1NRGLb0bbQh8lOIpYg4vikguAZGMhCTI9': '../data/boomy/metadata/Kaisa_18219005.json',
-            //     '1TW4V8RCrEzJMTEGniX63E_gHEzV0IrC3': '../data/boomy/metadata/Kaisa_18219022.json',
-            //     '1cEiIbCkM1ImbF4nQ_viH2vwvwRuCCkRq': '../data/boomy/metadata/Kaisa_18219023.json',
-            //     '1PdwzU-IYxUnjgKDmD4NWf7MqGktITNFJ': '../data/boomy/metadata/Kaisa_18883550.json',
-            //     '1wE4sNmR_IUUDUi7novatM27lINwzeBqc': '../data/boomy/metadata/Kaisa_18883863.json',
-            //     '1t2rkxwDlbrN-3XMYn0PeHDldGorTGGVR': '../data/boomy/metadata/Kaisa_18883878.json',
-            //     '1IDTOMnNA9_iJTo-vk5FeFqfXigDOfNKH': '../data/boomy/metadata/Kaisa_18883885.json',
-            //     '1IhtTtK1o2mMm0A8PuebUTMVUqAnp_cgE': '../data/boomy/metadata/Kaisa_18883888.json',
-            //     '1a6tRJzBl_gsBPf97V1iKgStHcVjNZ9G2': '../data/boomy/metadata/Kaisa_18883899.json',
-            //     '19Ig8uG0ftjG28Wlsmj6zAAQwyYVJQmex': '../data/boomy/metadata/Kaisa_18883906.json',
-            //     '1YOJJhWAjgrE1nhRV8puJWEiGkTsG8hqB': '../data/boomy/metadata/Kaisa_18883924.json',
-            //     '1XSms8ufTShP0VSTUPWC2sBD5XBihGOkw': '../data/boomy/metadata/Kaisa_18884479.json',
-            //     '1Qtj1yG7yYNfpWtCG-3UHTxGxsWBIEwdN': '../data/boomy/metadata/Kaisa_18884484.json',
-            //     '1e525oiKKTTBmC1Wn2X-34-u574LorlPm': '../data/boomy/metadata/Kaisa_18884486.json',
-            //     '1WLbvtTxmVs1Awszk-62YA_vuMJdH1fq_': '../data/boomy/metadata/Kaisa_18884491.json',
-            //     '1FlvqCb86YEv3NmPNUk-hMD4rfs9A6pY4': '../data/boomy/metadata/RB_anchor.json',
-            //     '1t5_KxAgmW_UN01gUPdYoR5jFEwgjGPU4': '../data/boomy/metadata/RB_sample1.json',
-            //     '1I67xvHLPI_1R6xXpWSkBhoqxgHiy1JuR': '../data/boomy/metadata/RB_sample2.json',
-            // };
-            var fileIdMap = {
-                'experiment_samples/ED_anchor.mp3': '../data/boomy/metadata/ED_anchor.json',
-                'experiment_samples/ED_sample1.mp3': '../data/boomy/metadata/ED_sample1.json',
-                'experiment_samples/ED_sample2.mp3': '../data/boomy/metadata/ED_sample2.json',
-                'experiment_samples/GG_anchor.mp3': '../data/boomy/metadata/GG_anchor.json',
-                'experiment_samples/GG_sample1.mp3': '../data/boomy/metadata/GG_sample1.json',
-                'experiment_samples/GG_sample2.mp3': '../data/boomy/metadata/GG_sample2.json',
-                'experiment_samples/Kaisa_18062622.mp3': '../data/boomy/metadata/Kaisa_18062622.json',
-                'experiment_samples/Kaisa_18062623.mp3': '../data/boomy/metadata/Kaisa_18062623.json',
-                'experiment_samples/Kaisa_18073874.mp3': '../data/boomy/metadata/Kaisa_18073874.json',
-                'experiment_samples/Kaisa_18074756.mp3': '../data/boomy/metadata/Kaisa_18074756.json',
-                'experiment_samples/Kaisa_18074876.mp3': '../data/boomy/metadata/Kaisa_18074876.json',
-                'experiment_samples/Kaisa_18089951.mp3': '../data/boomy/metadata/Kaisa_18089951.json',
-                'experiment_samples/Kaisa_18089977.mp3': '../data/boomy/metadata/Kaisa_18089977.json',
-                'experiment_samples/Kaisa_18089996.mp3': '../data/boomy/metadata/Kaisa_18089996.json',
-                'experiment_samples/Kaisa_18090100.mp3': '../data/boomy/metadata/Kaisa_18090100.json',
-                'experiment_samples/Kaisa_18090105.mp3': '../data/boomy/metadata/Kaisa_18090105.json',
-                'experiment_samples/Kaisa_18090121.mp3': '../data/boomy/metadata/Kaisa_18090121.json',
-                'experiment_samples/Kaisa_18090157.mp3': '../data/boomy/metadata/Kaisa_18090157.json',
-                'experiment_samples/Kaisa_18100235.mp3': '../data/boomy/metadata/Kaisa_18100235.json',
-                'experiment_samples/Kaisa_18190896.mp3': '../data/boomy/metadata/Kaisa_18190896.json',
-                'experiment_samples/Kaisa_18190910.mp3': '../data/boomy/metadata/Kaisa_18190910.json',
-                'experiment_samples/Kaisa_18190911.mp3': '../data/boomy/metadata/Kaisa_18190911.json',
-                'experiment_samples/Kaisa_18190939.mp3': '../data/boomy/metadata/Kaisa_18190939.json',
-                'experiment_samples/Kaisa_18190944.mp3': '../data/boomy/metadata/Kaisa_18190944.json',
-                'experiment_samples/Kaisa_18190947.mp3': '../data/boomy/metadata/Kaisa_18190947.json',
-                'experiment_samples/Kaisa_18218977.mp3': '../data/boomy/metadata/Kaisa_18218977.json',
-                'experiment_samples/Kaisa_18219002.mp3': '../data/boomy/metadata/Kaisa_18219002.json',
-                'experiment_samples/Kaisa_18219005.mp3': '../data/boomy/metadata/Kaisa_18219005.json',
-                'experiment_samples/Kaisa_18219022.mp3': '../data/boomy/metadata/Kaisa_18219022.json',
-                'experiment_samples/Kaisa_18219023.mp3': '../data/boomy/metadata/Kaisa_18219023.json',
-                'experiment_samples/Kaisa_18883550.mp3': '../data/boomy/metadata/Kaisa_18883550.json',
-                'experiment_samples/Kaisa_18883863.mp3': '../data/boomy/metadata/Kaisa_18883863.json',
-                'experiment_samples/Kaisa_18883878.mp3': '../data/boomy/metadata/Kaisa_18883878.json',
-                'experiment_samples/Kaisa_18883885.mp3': '../data/boomy/metadata/Kaisa_18883885.json',
-                'experiment_samples/Kaisa_18883888.mp3': '../data/boomy/metadata/Kaisa_18883888.json',
-                'experiment_samples/Kaisa_18883899.mp3': '../data/boomy/metadata/Kaisa_18883899.json',
-                'experiment_samples/Kaisa_18883906.mp3': '../data/boomy/metadata/Kaisa_18883906.json',
-                'experiment_samples/Kaisa_18883924.mp3': '../data/boomy/metadata/Kaisa_18883924.json',
-                'experiment_samples/Kaisa_18884479.mp3': '../data/boomy/metadata/Kaisa_18884479.json',
-                'experiment_samples/Kaisa_18884484.mp3': '../data/boomy/metadata/Kaisa_18884484.json',
-                'experiment_samples/Kaisa_18884486.mp3': '../data/boomy/metadata/Kaisa_18884486.json',
-                'experiment_samples/Kaisa_18884491.mp3': '../data/boomy/metadata/Kaisa_18884491.json',
-                'experiment_samples/RB_anchor.mp3': '../data/boomy/metadata/RB_anchor.json',
-                'experiment_samples/RB_sample1.mp3': '../data/boomy/metadata/RB_sample1.json',
-                'experiment_samples/RB_sample2.mp3': '../data/boomy/metadata/RB_sample2.json',
-                'experiment_samples/ED_anchor.mp3': '../data/boomy/metadata/ED_anchor.json',
-                'experiment_samples/ED_sample1.mp3': '../data/boomy/metadata/ED_sample1.json',
-                'experiment_samples/ED_sample2.mp3': '../data/boomy/metadata/ED_sample2.json',
-                'experiment_samples/GG_anchor.mp3': '../data/boomy/metadata/GG_anchor.json',
-                'experiment_samples/GG_sample1.mp3': '../data/boomy/metadata/GG_sample1.json',
-                'experiment_samples/GG_sample2.mp3': '../data/boomy/metadata/GG_sample2.json',
-                'experiment_samples/Kaisa_18062622.mp3': '../data/boomy/metadata/Kaisa_18062622.json',
-                'experiment_samples/Kaisa_18062623.mp3': '../data/boomy/metadata/Kaisa_18062623.json',
-                'experiment_samples/Kaisa_18073874.mp3': '../data/boomy/metadata/Kaisa_18073874.json',
-                'experiment_samples/Kaisa_18074756.mp3': '../data/boomy/metadata/Kaisa_18074756.json',
-                'experiment_samples/Kaisa_18074876.mp3': '../data/boomy/metadata/Kaisa_18074876.json',
-                'experiment_samples/Kaisa_18089951.mp3': '../data/boomy/metadata/Kaisa_18089951.json',
-                'experiment_samples/Kaisa_18089977.mp3': '../data/boomy/metadata/Kaisa_18089977.json',
-                'experiment_samples/Kaisa_18089996.mp3': '../data/boomy/metadata/Kaisa_18089996.json',
-                'experiment_samples/Kaisa_18090100.mp3': '../data/boomy/metadata/Kaisa_18090100.json',
-                'experiment_samples/Kaisa_18090105.mp3': '../data/boomy/metadata/Kaisa_18090105.json',
-                'experiment_samples/Kaisa_18090121.mp3': '../data/boomy/metadata/Kaisa_18090121.json',
-                'experiment_samples/Kaisa_18090157.mp3': '../data/boomy/metadata/Kaisa_18090157.json',
-                'experiment_samples/Kaisa_18100235.mp3': '../data/boomy/metadata/Kaisa_18100235.json',
-                'experiment_samples/Kaisa_18190896.mp3': '../data/boomy/metadata/Kaisa_18190896.json',
-                'experiment_samples/Kaisa_18190910.mp3': '../data/boomy/metadata/Kaisa_18190910.json',
-                'experiment_samples/Kaisa_18190911.mp3': '../data/boomy/metadata/Kaisa_18190911.json',
-                'experiment_samples/Kaisa_18190939.mp3': '../data/boomy/metadata/Kaisa_18190939.json',
-                'experiment_samples/Kaisa_18190944.mp3': '../data/boomy/metadata/Kaisa_18190944.json',
-                'experiment_samples/Kaisa_18190947.mp3': '../data/boomy/metadata/Kaisa_18190947.json',
-                'experiment_samples/Kaisa_18218977.mp3': '../data/boomy/metadata/Kaisa_18218977.json',
-                'experiment_samples/Kaisa_18219002.mp3': '../data/boomy/metadata/Kaisa_18219002.json',
-                'experiment_samples/Kaisa_18219005.mp3': '../data/boomy/metadata/Kaisa_18219005.json',
-                'experiment_samples/Kaisa_18219022.mp3': '../data/boomy/metadata/Kaisa_18219022.json',
-                'experiment_samples/Kaisa_18219023.mp3': '../data/boomy/metadata/Kaisa_18219023.json',
-                'experiment_samples/Kaisa_18883550.mp3': '../data/boomy/metadata/Kaisa_18883550.json',
-                'experiment_samples/Kaisa_18883863.mp3': '../data/boomy/metadata/Kaisa_18883863.json',
-                'experiment_samples/Kaisa_18883878.mp3': '../data/boomy/metadata/Kaisa_18883878.json',
-                'experiment_samples/Kaisa_18883885.mp3': '../data/boomy/metadata/Kaisa_18883885.json',
-                'experiment_samples/Kaisa_18883888.mp3': '../data/boomy/metadata/Kaisa_18883888.json',
-                'experiment_samples/Kaisa_18883899.mp3': '../data/boomy/metadata/Kaisa_18883899.json',
-                'experiment_samples/Kaisa_18883906.mp3': '../data/boomy/metadata/Kaisa_18883906.json',
-                'experiment_samples/Kaisa_18883924.mp3': '../data/boomy/metadata/Kaisa_18883924.json',
-                'experiment_samples/Kaisa_18884479.mp3': '../data/boomy/metadata/Kaisa_18884479.json',
-                'experiment_samples/Kaisa_18884484.mp3': '../data/boomy/metadata/Kaisa_18884484.json',
-                'experiment_samples/Kaisa_18884486.mp3': '../data/boomy/metadata/Kaisa_18884486.json',
-                'experiment_samples/Kaisa_18884491.mp3': '../data/boomy/metadata/Kaisa_18884491.json',
-                'experiment_samples/RB_anchor.mp3': '../data/boomy/metadata/RB_anchor.json',
-                'experiment_samples/RB_sample1.mp3': '../data/boomy/metadata/RB_sample1.json',
-                'experiment_samples/RB_sample2.mp3': '../data/boomy/metadata/RB_sample2.json',
-            };
+<div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+    <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.29.1.min.js"></script>                <div id="344f4505-7e4c-42ab-a2df-030c8b856937" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("344f4505-7e4c-42ab-a2df-030c8b856937")) {                    Plotly.newPlot(                        "344f4505-7e4c-42ab-a2df-030c8b856937",                        [{"customdata":[["experiment_samples\u002fKaisa_18089998.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089997.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089996.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089991.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089989.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089986.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089981.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089977.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089973.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089971.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089964.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089953.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089960.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089951.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089948.mp3","Global Groove"],["experiment_samples\u002fKaisa_18089939.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074864.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074823.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074759.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074674.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074794.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074838.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074684.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074852.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074712.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074728.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074876.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074764.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074739.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074700.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074756.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074671.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090131.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090161.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090137.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090164.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090145.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090129.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090113.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090120.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090130.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090121.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090141.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090157.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090100.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090105.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090108.mp3","Global Groove"],["experiment_samples\u002fKaisa_18090094.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073895.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073913.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073927.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073908.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073885.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073874.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073899.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073890.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073917.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074505.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074500.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074487.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074480.mp3","Global Groove"],["experiment_samples\u002fKaisa_18074058.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073933.mp3","Global Groove"],["experiment_samples\u002fKaisa_18073937.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062621.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062591.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062623.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062627.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062629.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062631.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062634.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062641.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062643.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062650.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062654.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062662.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062663.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062664.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062622.mp3","Global Groove"],["experiment_samples\u002fKaisa_18062665.mp3","Global Groove"]],"hovertemplate":"style=%{customdata[1]}\u003cbr\u003eumap_x=%{x}\u003cbr\u003eumap_y=%{y}\u003cbr\u003eaudio_file=%{customdata[0]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Global Groove","marker":{"color":"#636EFA","symbol":"circle"},"mode":"markers","name":"Global Groove","orientation":"v","showlegend":true,"x":[-0.9196687936782837,-0.8673743605613708,-0.7230659127235413,-0.5244211554527283,-0.4350156784057617,-0.565711259841919,-2.144164562225342,-0.9427972435951233,-2.208421468734741,-0.9135956168174744,-0.48558682203292847,-0.8855839967727661,-0.836100697517395,0.010624549351632595,-0.6263120770454407,-0.48262786865234375,-1.3727388381958008,-1.9125155210494995,-1.7337589263916016,-2.0061380863189697,-1.0545830726623535,-1.884445309638977,-1.943372130393982,-2.090618133544922,-1.8440650701522827,-2.0540075302124023,-2.4766499996185303,-2.145494222640991,-1.6460648775100708,-1.0506950616836548,-2.944362163543701,-0.7487937808036804,-0.7488113045692444,-1.6717593669891357,-0.9755967855453491,-0.9875565767288208,-1.790518045425415,-1.0064226388931274,-1.1870468854904175,-0.9398258924484253,-0.822665274143219,-0.7416970133781433,-1.7409878969192505,-0.9595949649810791,-2.3265810012817383,-1.158476710319519,-0.8213304877281189,-1.101008653640747,3.291008472442627,-1.9219847917556763,-1.3439140319824219,-2.0830485820770264,-1.0734330415725708,-2.2299554347991943,-0.9539462327957153,-0.8386621475219727,-0.7675644159317017,-2.0441296100616455,-1.966080904006958,-2.426900863647461,-0.9978383183479309,-0.9595097899436951,-0.8286921381950378,-2.0683586597442627,-0.6914860606193542,-1.6165810823440552,-0.694781482219696,-1.883789300918579,0.10985630750656128,-1.0832493305206299,-0.9830230474472046,-1.4283738136291504,-0.1742376685142517,-0.5730791687965393,-1.018174648284912,-1.0514663457870483,-0.7139412760734558,-1.1858539581298828,-0.34779348969459534,-0.49039825797080994],"xaxis":"x","y":[2.733027219772339,1.9842149019241333,2.744967460632324,2.845057725906372,1.5519912242889404,2.0792200565338135,1.7181804180145264,1.9139328002929688,1.7007793188095093,2.6274192333221436,2.5522539615631104,2.7044296264648438,2.177915573120117,0.42579013109207153,2.205003023147583,2.073543071746826,1.2351150512695312,2.490351676940918,0.8239752054214478,1.9599090814590454,2.5418660640716553,1.8062570095062256,1.963079810142517,1.3047815561294556,1.9489963054656982,1.6793855428695679,1.0403672456741333,1.9563764333724976,1.6631642580032349,0.6722162365913391,1.1486752033233643,1.2813986539840698,2.3781585693359375,2.1710736751556396,2.691004991531372,2.338291883468628,2.4957408905029297,2.703638792037964,2.768723249435425,2.1326797008514404,2.8514528274536133,2.5383334159851074,2.3054869174957275,2.7309868335723877,1.931359887123108,2.8711466789245605,2.2707090377807617,2.740567207336426,5.928363800048828,2.355591058731079,2.2582714557647705,2.4954638481140137,2.488466739654541,2.1829309463500977,2.1777596473693848,2.528097152709961,2.5252296924591064,2.529899835586548,2.268441677093506,1.8146754503250122,2.7247536182403564,2.384016990661621,2.435365676879883,1.898460030555725,1.7502928972244263,1.7186594009399414,2.160038948059082,2.365211248397827,1.0178495645523071,1.8151484727859497,1.8749711513519287,2.005141496658325,1.4095412492752075,1.4080102443695068,1.7564984560012817,1.8872953653335571,1.5780311822891235,1.8345125913619995,1.3589868545532227,1.4077918529510498],"yaxis":"y","type":"scatter"},{"customdata":[["experiment_samples\u002fKaisa_18219097.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219088.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219096.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219101.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219108.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219106.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219105.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219104.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219119.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219114.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219113.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219120.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219121.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219109.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219122.mp3","Lo-Fi"],["experiment_samples\u002fKaisa_18219123.mp3","Lo-Fi"]],"hovertemplate":"style=%{customdata[1]}\u003cbr\u003eumap_x=%{x}\u003cbr\u003eumap_y=%{y}\u003cbr\u003eaudio_file=%{customdata[0]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Lo-Fi","marker":{"color":"#EF553B","symbol":"circle"},"mode":"markers","name":"Lo-Fi","orientation":"v","showlegend":true,"x":[-2.054579734802246,-2.852365732192993,-2.256563186645508,-2.689009428024292,-2.65810227394104,-2.8248097896575928,-2.081904649734497,-2.23118257522583,-2.548024892807007,-2.1471385955810547,-2.129998207092285,-2.646589994430542,-2.6905643939971924,-2.9186325073242188,-2.853677749633789,-2.7808144092559814],"xaxis":"x","y":[1.213597297668457,0.684098482131958,1.4287807941436768,2.3809218406677246,0.9807999730110168,0.6096014976501465,0.4211704432964325,0.7925994396209717,2.4508187770843506,2.1415839195251465,2.35139536857605,1.9001176357269287,0.5053104758262634,1.1742860078811646,1.0445958375930786,1.2359035015106201],"yaxis":"y","type":"scatter"},{"customdata":[["experiment_samples\u002fKaisa_18218965.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18218977.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18218984.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18218990.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18218995.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219001.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219002.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219004.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219005.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219008.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219011.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219021.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219022.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219013.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219023.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18219025.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190888.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190905.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190916.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190939.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190896.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190941.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190928.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190944.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190942.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18100244.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18100235.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190910.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190947.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190891.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18100231.mp3","Rap Beats"],["experiment_samples\u002fKaisa_18190911.mp3","Rap Beats"]],"hovertemplate":"style=%{customdata[1]}\u003cbr\u003eumap_x=%{x}\u003cbr\u003eumap_y=%{y}\u003cbr\u003eaudio_file=%{customdata[0]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Rap Beats","marker":{"color":"#00CC96","symbol":"circle"},"mode":"markers","name":"Rap Beats","orientation":"v","showlegend":true,"x":[-1.929654836654663,-2.308919668197632,-2.488370418548584,-1.8707025051116943,-1.618502140045166,-0.6071144342422485,-1.360771894454956,-2.253364086151123,-2.381273031234741,-1.8947347402572632,-1.8893576860427856,-1.8545103073120117,-1.8031516075134277,-2.1286535263061523,-1.9314230680465698,-0.44388824701309204,-1.9724342823028564,-1.4757307767868042,-0.8217593431472778,-1.6996808052062988,-1.1334048509597778,-1.4819620847702026,-1.6256555318832397,-1.6756466627120972,-1.6891932487487793,-1.3366845846176147,-1.6968661546707153,-1.6358073949813843,-1.4373222589492798,-1.009395956993103,-1.5285733938217163,-2.1295483112335205],"xaxis":"x","y":[1.7069942951202393,1.5964339971542358,2.1903693675994873,1.8587573766708374,2.4098360538482666,2.4557065963745117,2.099839210510254,1.963013768196106,1.328938603401184,2.0333080291748047,2.2113664150238037,1.7537511587142944,2.2693557739257812,1.5287766456604004,1.9342902898788452,2.483424663543701,0.6552149057388306,2.59464168548584,1.953928828239441,1.5255297422409058,1.7356761693954468,1.6976035833358765,1.3816975355148315,1.0655865669250488,2.6661953926086426,1.403764009475708,1.3807456493377686,1.3750360012054443,2.845140218734741,1.3230470418930054,2.7192776203155518,1.458221197128296],"yaxis":"y","type":"scatter"},{"customdata":[["experiment_samples\u002fKaisa_18884721.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884730.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884741.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884752.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884760.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884771.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884777.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884784.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884797.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884802.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884812.mp3","Relaxing Meditation"],["experiment_samples\u002fKaisa_18884818.mp3","Relaxing Meditation"]],"hovertemplate":"style=%{customdata[1]}\u003cbr\u003eumap_x=%{x}\u003cbr\u003eumap_y=%{y}\u003cbr\u003eaudio_file=%{customdata[0]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Relaxing Meditation","marker":{"color":"#AB63FA","symbol":"circle"},"mode":"markers","name":"Relaxing Meditation","orientation":"v","showlegend":true,"x":[-1.938209056854248,-1.5440785884857178,-0.772475004196167,-0.8354916572570801,-0.30939409136772156,-1.6317251920700073,-0.5447978973388672,-0.7648311853408813,-1.0581270456314087,-1.3911505937576294,-0.5251584053039551,-0.9082757830619812],"xaxis":"x","y":[9.375247955322266,9.16791820526123,8.652312278747559,8.205109596252441,8.84947395324707,9.04525089263916,8.662782669067383,8.30998420715332,9.171667098999023,8.86349105834961,8.58325481414795,8.158514022827148],"yaxis":"y","type":"scatter"},{"customdata":[["experiment_samples\u002fKaisa_18883550.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18883863.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18883878.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18883885.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18883888.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18883899.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18883906.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18883924.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18884479.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18884484.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18884486.mp3","Electronic Dance"],["experiment_samples\u002fKaisa_18884491.mp3","Electronic Dance"]],"hovertemplate":"style=%{customdata[1]}\u003cbr\u003eumap_x=%{x}\u003cbr\u003eumap_y=%{y}\u003cbr\u003eaudio_file=%{customdata[0]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Electronic Dance","marker":{"color":"#FFA15A","symbol":"circle"},"mode":"markers","name":"Electronic Dance","orientation":"v","showlegend":true,"x":[-2.548190116882324,0.581652820110321,0.6750209331512451,-2.394552230834961,-0.1519050896167755,-0.15683382749557495,-0.40963050723075867,-0.06516856700181961,-0.7410444021224976,-0.9554644227027893,-1.322581171989441,-1.0582436323165894],"xaxis":"x","y":[1.4465523958206177,0.3954291343688965,0.33312350511550903,1.4817147254943848,-1.1615453958511353,-1.0447473526000977,-0.8339658379554749,-0.6826671361923218,0.16676345467567444,0.33613210916519165,0.3892146646976471,0.23971055448055267],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"umap_x"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"umap_y"}},"legend":{"title":{"text":"style"},"tracegroupgap":0},"margin":{"t":60}},                        {"responsive": true}                    )                };                            </script>        </div><script>
 
-            // Load scatter plot data
-            $.getJSON('kaisa_umap.html', function(data){
-                scatterData = data['data'][0]; // Scatter plot data
+var audioFiles = {};
+var myPlot = document.getElementById('myDiv');
+myPlot.on('plotly_click', function(data) {
+var audio_file = data.points[0].customdata;
+var audioToPlay = audioFiles[audio_file];
+if (audioToPlay) {
+    audioToPlay.play();
+}
+});
+myPlot.on('plotly_unhover', function(data) {
+var audio_file = data.points[0].customdata;
+var audioToPlay = audioFiles[audio_file];
+if (audioToPlay) {
+    audioToPlay.pause();
+    audioToPlay.currentTime = 0;
+}
+});
 
-                // Draw scatter plot
-                Plotly.newPlot('scatter-plot', [scatterData], {
-                    hovermode: 'closest'
-                });
-
-                // Event handler for clicking on a point
-                $('#scatter-plot').on('plotly_click', function(data){
-                    var pointIndex = data.points[0].pointIndex;
-                    var fileId = Object.keys(fileIdMap)[pointIndex];
-                    var fileName = fileIdMap[fileId];
-                    // var audioURL = 'https://drive.google.com/uc?id=' + fileId;
-                    var audioURL = fileId;
-                    if (audioURL) {
-                        var audio = document.getElementById('audio-player');
-                        // Set the source of the audio player to the Google Drive URL
-                        audio.src = audioURL;
-                        audio.play();
-                    }
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+var myPlot = document.getElementById('myDiv');
+audioFiles['experiment_samples/Kaisa_18089998.mp3'] = new Audio('experiment_samples/Kaisa_18089998.mp3');
+audioFiles['experiment_samples/Kaisa_18089997.mp3'] = new Audio('experiment_samples/Kaisa_18089997.mp3');
+audioFiles['experiment_samples/Kaisa_18089996.mp3'] = new Audio('experiment_samples/Kaisa_18089996.mp3');
+audioFiles['experiment_samples/Kaisa_18089991.mp3'] = new Audio('experiment_samples/Kaisa_18089991.mp3');
+audioFiles['experiment_samples/Kaisa_18089989.mp3'] = new Audio('experiment_samples/Kaisa_18089989.mp3');
+audioFiles['experiment_samples/Kaisa_18089986.mp3'] = new Audio('experiment_samples/Kaisa_18089986.mp3');
+audioFiles['experiment_samples/Kaisa_18089981.mp3'] = new Audio('experiment_samples/Kaisa_18089981.mp3');
+audioFiles['experiment_samples/Kaisa_18089977.mp3'] = new Audio('experiment_samples/Kaisa_18089977.mp3');
+audioFiles['experiment_samples/Kaisa_18089973.mp3'] = new Audio('experiment_samples/Kaisa_18089973.mp3');
+audioFiles['experiment_samples/Kaisa_18089971.mp3'] = new Audio('experiment_samples/Kaisa_18089971.mp3');
+audioFiles['experiment_samples/Kaisa_18089964.mp3'] = new Audio('experiment_samples/Kaisa_18089964.mp3');
+audioFiles['experiment_samples/Kaisa_18089953.mp3'] = new Audio('experiment_samples/Kaisa_18089953.mp3');
+audioFiles['experiment_samples/Kaisa_18089960.mp3'] = new Audio('experiment_samples/Kaisa_18089960.mp3');
+audioFiles['experiment_samples/Kaisa_18089951.mp3'] = new Audio('experiment_samples/Kaisa_18089951.mp3');
+audioFiles['experiment_samples/Kaisa_18089948.mp3'] = new Audio('experiment_samples/Kaisa_18089948.mp3');
+audioFiles['experiment_samples/Kaisa_18089939.mp3'] = new Audio('experiment_samples/Kaisa_18089939.mp3');
+audioFiles['experiment_samples/Kaisa_18074864.mp3'] = new Audio('experiment_samples/Kaisa_18074864.mp3');
+audioFiles['experiment_samples/Kaisa_18074823.mp3'] = new Audio('experiment_samples/Kaisa_18074823.mp3');
+audioFiles['experiment_samples/Kaisa_18074759.mp3'] = new Audio('experiment_samples/Kaisa_18074759.mp3');
+audioFiles['experiment_samples/Kaisa_18074674.mp3'] = new Audio('experiment_samples/Kaisa_18074674.mp3');
+audioFiles['experiment_samples/Kaisa_18074794.mp3'] = new Audio('experiment_samples/Kaisa_18074794.mp3');
+audioFiles['experiment_samples/Kaisa_18074838.mp3'] = new Audio('experiment_samples/Kaisa_18074838.mp3');
+audioFiles['experiment_samples/Kaisa_18074684.mp3'] = new Audio('experiment_samples/Kaisa_18074684.mp3');
+audioFiles['experiment_samples/Kaisa_18074852.mp3'] = new Audio('experiment_samples/Kaisa_18074852.mp3');
+audioFiles['experiment_samples/Kaisa_18074712.mp3'] = new Audio('experiment_samples/Kaisa_18074712.mp3');
+audioFiles['experiment_samples/Kaisa_18074728.mp3'] = new Audio('experiment_samples/Kaisa_18074728.mp3');
+audioFiles['experiment_samples/Kaisa_18074876.mp3'] = new Audio('experiment_samples/Kaisa_18074876.mp3');
+audioFiles['experiment_samples/Kaisa_18074764.mp3'] = new Audio('experiment_samples/Kaisa_18074764.mp3');
+audioFiles['experiment_samples/Kaisa_18074739.mp3'] = new Audio('experiment_samples/Kaisa_18074739.mp3');
+audioFiles['experiment_samples/Kaisa_18074700.mp3'] = new Audio('experiment_samples/Kaisa_18074700.mp3');
+audioFiles['experiment_samples/Kaisa_18074756.mp3'] = new Audio('experiment_samples/Kaisa_18074756.mp3');
+audioFiles['experiment_samples/Kaisa_18074671.mp3'] = new Audio('experiment_samples/Kaisa_18074671.mp3');
+audioFiles['experiment_samples/Kaisa_18219097.mp3'] = new Audio('experiment_samples/Kaisa_18219097.mp3');
+audioFiles['experiment_samples/Kaisa_18219088.mp3'] = new Audio('experiment_samples/Kaisa_18219088.mp3');
+audioFiles['experiment_samples/Kaisa_18219096.mp3'] = new Audio('experiment_samples/Kaisa_18219096.mp3');
+audioFiles['experiment_samples/Kaisa_18219101.mp3'] = new Audio('experiment_samples/Kaisa_18219101.mp3');
+audioFiles['experiment_samples/Kaisa_18219108.mp3'] = new Audio('experiment_samples/Kaisa_18219108.mp3');
+audioFiles['experiment_samples/Kaisa_18219106.mp3'] = new Audio('experiment_samples/Kaisa_18219106.mp3');
+audioFiles['experiment_samples/Kaisa_18219105.mp3'] = new Audio('experiment_samples/Kaisa_18219105.mp3');
+audioFiles['experiment_samples/Kaisa_18219104.mp3'] = new Audio('experiment_samples/Kaisa_18219104.mp3');
+audioFiles['experiment_samples/Kaisa_18219119.mp3'] = new Audio('experiment_samples/Kaisa_18219119.mp3');
+audioFiles['experiment_samples/Kaisa_18219114.mp3'] = new Audio('experiment_samples/Kaisa_18219114.mp3');
+audioFiles['experiment_samples/Kaisa_18219113.mp3'] = new Audio('experiment_samples/Kaisa_18219113.mp3');
+audioFiles['experiment_samples/Kaisa_18219120.mp3'] = new Audio('experiment_samples/Kaisa_18219120.mp3');
+audioFiles['experiment_samples/Kaisa_18219121.mp3'] = new Audio('experiment_samples/Kaisa_18219121.mp3');
+audioFiles['experiment_samples/Kaisa_18219109.mp3'] = new Audio('experiment_samples/Kaisa_18219109.mp3');
+audioFiles['experiment_samples/Kaisa_18219122.mp3'] = new Audio('experiment_samples/Kaisa_18219122.mp3');
+audioFiles['experiment_samples/Kaisa_18219123.mp3'] = new Audio('experiment_samples/Kaisa_18219123.mp3');
+audioFiles['experiment_samples/Kaisa_18218965.mp3'] = new Audio('experiment_samples/Kaisa_18218965.mp3');
+audioFiles['experiment_samples/Kaisa_18218977.mp3'] = new Audio('experiment_samples/Kaisa_18218977.mp3');
+audioFiles['experiment_samples/Kaisa_18218984.mp3'] = new Audio('experiment_samples/Kaisa_18218984.mp3');
+audioFiles['experiment_samples/Kaisa_18218990.mp3'] = new Audio('experiment_samples/Kaisa_18218990.mp3');
+audioFiles['experiment_samples/Kaisa_18218995.mp3'] = new Audio('experiment_samples/Kaisa_18218995.mp3');
+audioFiles['experiment_samples/Kaisa_18219001.mp3'] = new Audio('experiment_samples/Kaisa_18219001.mp3');
+audioFiles['experiment_samples/Kaisa_18219002.mp3'] = new Audio('experiment_samples/Kaisa_18219002.mp3');
+audioFiles['experiment_samples/Kaisa_18219004.mp3'] = new Audio('experiment_samples/Kaisa_18219004.mp3');
+audioFiles['experiment_samples/Kaisa_18219005.mp3'] = new Audio('experiment_samples/Kaisa_18219005.mp3');
+audioFiles['experiment_samples/Kaisa_18219008.mp3'] = new Audio('experiment_samples/Kaisa_18219008.mp3');
+audioFiles['experiment_samples/Kaisa_18219011.mp3'] = new Audio('experiment_samples/Kaisa_18219011.mp3');
+audioFiles['experiment_samples/Kaisa_18219021.mp3'] = new Audio('experiment_samples/Kaisa_18219021.mp3');
+audioFiles['experiment_samples/Kaisa_18219022.mp3'] = new Audio('experiment_samples/Kaisa_18219022.mp3');
+audioFiles['experiment_samples/Kaisa_18219013.mp3'] = new Audio('experiment_samples/Kaisa_18219013.mp3');
+audioFiles['experiment_samples/Kaisa_18219023.mp3'] = new Audio('experiment_samples/Kaisa_18219023.mp3');
+audioFiles['experiment_samples/Kaisa_18219025.mp3'] = new Audio('experiment_samples/Kaisa_18219025.mp3');
+audioFiles['experiment_samples/Kaisa_18190888.mp3'] = new Audio('experiment_samples/Kaisa_18190888.mp3');
+audioFiles['experiment_samples/Kaisa_18190905.mp3'] = new Audio('experiment_samples/Kaisa_18190905.mp3');
+audioFiles['experiment_samples/Kaisa_18190916.mp3'] = new Audio('experiment_samples/Kaisa_18190916.mp3');
+audioFiles['experiment_samples/Kaisa_18190939.mp3'] = new Audio('experiment_samples/Kaisa_18190939.mp3');
+audioFiles['experiment_samples/Kaisa_18190896.mp3'] = new Audio('experiment_samples/Kaisa_18190896.mp3');
+audioFiles['experiment_samples/Kaisa_18190941.mp3'] = new Audio('experiment_samples/Kaisa_18190941.mp3');
+audioFiles['experiment_samples/Kaisa_18190928.mp3'] = new Audio('experiment_samples/Kaisa_18190928.mp3');
+audioFiles['experiment_samples/Kaisa_18190944.mp3'] = new Audio('experiment_samples/Kaisa_18190944.mp3');
+audioFiles['experiment_samples/Kaisa_18190942.mp3'] = new Audio('experiment_samples/Kaisa_18190942.mp3');
+audioFiles['experiment_samples/Kaisa_18100244.mp3'] = new Audio('experiment_samples/Kaisa_18100244.mp3');
+audioFiles['experiment_samples/Kaisa_18100235.mp3'] = new Audio('experiment_samples/Kaisa_18100235.mp3');
+audioFiles['experiment_samples/Kaisa_18190910.mp3'] = new Audio('experiment_samples/Kaisa_18190910.mp3');
+audioFiles['experiment_samples/Kaisa_18190947.mp3'] = new Audio('experiment_samples/Kaisa_18190947.mp3');
+audioFiles['experiment_samples/Kaisa_18190891.mp3'] = new Audio('experiment_samples/Kaisa_18190891.mp3');
+audioFiles['experiment_samples/Kaisa_18100231.mp3'] = new Audio('experiment_samples/Kaisa_18100231.mp3');
+audioFiles['experiment_samples/Kaisa_18190911.mp3'] = new Audio('experiment_samples/Kaisa_18190911.mp3');
+audioFiles['experiment_samples/Kaisa_18090131.mp3'] = new Audio('experiment_samples/Kaisa_18090131.mp3');
+audioFiles['experiment_samples/Kaisa_18090161.mp3'] = new Audio('experiment_samples/Kaisa_18090161.mp3');
+audioFiles['experiment_samples/Kaisa_18090137.mp3'] = new Audio('experiment_samples/Kaisa_18090137.mp3');
+audioFiles['experiment_samples/Kaisa_18090164.mp3'] = new Audio('experiment_samples/Kaisa_18090164.mp3');
+audioFiles['experiment_samples/Kaisa_18090145.mp3'] = new Audio('experiment_samples/Kaisa_18090145.mp3');
+audioFiles['experiment_samples/Kaisa_18090129.mp3'] = new Audio('experiment_samples/Kaisa_18090129.mp3');
+audioFiles['experiment_samples/Kaisa_18090113.mp3'] = new Audio('experiment_samples/Kaisa_18090113.mp3');
+audioFiles['experiment_samples/Kaisa_18090120.mp3'] = new Audio('experiment_samples/Kaisa_18090120.mp3');
+audioFiles['experiment_samples/Kaisa_18090130.mp3'] = new Audio('experiment_samples/Kaisa_18090130.mp3');
+audioFiles['experiment_samples/Kaisa_18090121.mp3'] = new Audio('experiment_samples/Kaisa_18090121.mp3');
+audioFiles['experiment_samples/Kaisa_18090141.mp3'] = new Audio('experiment_samples/Kaisa_18090141.mp3');
+audioFiles['experiment_samples/Kaisa_18090157.mp3'] = new Audio('experiment_samples/Kaisa_18090157.mp3');
+audioFiles['experiment_samples/Kaisa_18090100.mp3'] = new Audio('experiment_samples/Kaisa_18090100.mp3');
+audioFiles['experiment_samples/Kaisa_18090105.mp3'] = new Audio('experiment_samples/Kaisa_18090105.mp3');
+audioFiles['experiment_samples/Kaisa_18090108.mp3'] = new Audio('experiment_samples/Kaisa_18090108.mp3');
+audioFiles['experiment_samples/Kaisa_18090094.mp3'] = new Audio('experiment_samples/Kaisa_18090094.mp3');
+audioFiles['experiment_samples/Kaisa_18073895.mp3'] = new Audio('experiment_samples/Kaisa_18073895.mp3');
+audioFiles['experiment_samples/Kaisa_18073913.mp3'] = new Audio('experiment_samples/Kaisa_18073913.mp3');
+audioFiles['experiment_samples/Kaisa_18073927.mp3'] = new Audio('experiment_samples/Kaisa_18073927.mp3');
+audioFiles['experiment_samples/Kaisa_18073908.mp3'] = new Audio('experiment_samples/Kaisa_18073908.mp3');
+audioFiles['experiment_samples/Kaisa_18073885.mp3'] = new Audio('experiment_samples/Kaisa_18073885.mp3');
+audioFiles['experiment_samples/Kaisa_18073874.mp3'] = new Audio('experiment_samples/Kaisa_18073874.mp3');
+audioFiles['experiment_samples/Kaisa_18073899.mp3'] = new Audio('experiment_samples/Kaisa_18073899.mp3');
+audioFiles['experiment_samples/Kaisa_18073890.mp3'] = new Audio('experiment_samples/Kaisa_18073890.mp3');
+audioFiles['experiment_samples/Kaisa_18073917.mp3'] = new Audio('experiment_samples/Kaisa_18073917.mp3');
+audioFiles['experiment_samples/Kaisa_18074505.mp3'] = new Audio('experiment_samples/Kaisa_18074505.mp3');
+audioFiles['experiment_samples/Kaisa_18074500.mp3'] = new Audio('experiment_samples/Kaisa_18074500.mp3');
+audioFiles['experiment_samples/Kaisa_18074487.mp3'] = new Audio('experiment_samples/Kaisa_18074487.mp3');
+audioFiles['experiment_samples/Kaisa_18074480.mp3'] = new Audio('experiment_samples/Kaisa_18074480.mp3');
+audioFiles['experiment_samples/Kaisa_18074058.mp3'] = new Audio('experiment_samples/Kaisa_18074058.mp3');
+audioFiles['experiment_samples/Kaisa_18073933.mp3'] = new Audio('experiment_samples/Kaisa_18073933.mp3');
+audioFiles['experiment_samples/Kaisa_18073937.mp3'] = new Audio('experiment_samples/Kaisa_18073937.mp3');
+audioFiles['experiment_samples/Kaisa_18062621.mp3'] = new Audio('experiment_samples/Kaisa_18062621.mp3');
+audioFiles['experiment_samples/Kaisa_18062591.mp3'] = new Audio('experiment_samples/Kaisa_18062591.mp3');
+audioFiles['experiment_samples/Kaisa_18062623.mp3'] = new Audio('experiment_samples/Kaisa_18062623.mp3');
+audioFiles['experiment_samples/Kaisa_18062627.mp3'] = new Audio('experiment_samples/Kaisa_18062627.mp3');
+audioFiles['experiment_samples/Kaisa_18062629.mp3'] = new Audio('experiment_samples/Kaisa_18062629.mp3');
+audioFiles['experiment_samples/Kaisa_18062631.mp3'] = new Audio('experiment_samples/Kaisa_18062631.mp3');
+audioFiles['experiment_samples/Kaisa_18062634.mp3'] = new Audio('experiment_samples/Kaisa_18062634.mp3');
+audioFiles['experiment_samples/Kaisa_18062641.mp3'] = new Audio('experiment_samples/Kaisa_18062641.mp3');
+audioFiles['experiment_samples/Kaisa_18062643.mp3'] = new Audio('experiment_samples/Kaisa_18062643.mp3');
+audioFiles['experiment_samples/Kaisa_18062650.mp3'] = new Audio('experiment_samples/Kaisa_18062650.mp3');
+audioFiles['experiment_samples/Kaisa_18062654.mp3'] = new Audio('experiment_samples/Kaisa_18062654.mp3');
+audioFiles['experiment_samples/Kaisa_18062662.mp3'] = new Audio('experiment_samples/Kaisa_18062662.mp3');
+audioFiles['experiment_samples/Kaisa_18062663.mp3'] = new Audio('experiment_samples/Kaisa_18062663.mp3');
+audioFiles['experiment_samples/Kaisa_18062664.mp3'] = new Audio('experiment_samples/Kaisa_18062664.mp3');
+audioFiles['experiment_samples/Kaisa_18062622.mp3'] = new Audio('experiment_samples/Kaisa_18062622.mp3');
+audioFiles['experiment_samples/Kaisa_18062665.mp3'] = new Audio('experiment_samples/Kaisa_18062665.mp3');
+audioFiles['experiment_samples/Kaisa_18884721.mp3'] = new Audio('experiment_samples/Kaisa_18884721.mp3');
+audioFiles['experiment_samples/Kaisa_18884730.mp3'] = new Audio('experiment_samples/Kaisa_18884730.mp3');
+audioFiles['experiment_samples/Kaisa_18884741.mp3'] = new Audio('experiment_samples/Kaisa_18884741.mp3');
+audioFiles['experiment_samples/Kaisa_18884752.mp3'] = new Audio('experiment_samples/Kaisa_18884752.mp3');
+audioFiles['experiment_samples/Kaisa_18884760.mp3'] = new Audio('experiment_samples/Kaisa_18884760.mp3');
+audioFiles['experiment_samples/Kaisa_18884771.mp3'] = new Audio('experiment_samples/Kaisa_18884771.mp3');
+audioFiles['experiment_samples/Kaisa_18884777.mp3'] = new Audio('experiment_samples/Kaisa_18884777.mp3');
+audioFiles['experiment_samples/Kaisa_18884784.mp3'] = new Audio('experiment_samples/Kaisa_18884784.mp3');
+audioFiles['experiment_samples/Kaisa_18884797.mp3'] = new Audio('experiment_samples/Kaisa_18884797.mp3');
+audioFiles['experiment_samples/Kaisa_18884802.mp3'] = new Audio('experiment_samples/Kaisa_18884802.mp3');
+audioFiles['experiment_samples/Kaisa_18884812.mp3'] = new Audio('experiment_samples/Kaisa_18884812.mp3');
+audioFiles['experiment_samples/Kaisa_18884818.mp3'] = new Audio('experiment_samples/Kaisa_18884818.mp3');
+audioFiles['experiment_samples/Kaisa_18883550.mp3'] = new Audio('experiment_samples/Kaisa_18883550.mp3');
+audioFiles['experiment_samples/Kaisa_18883863.mp3'] = new Audio('experiment_samples/Kaisa_18883863.mp3');
+audioFiles['experiment_samples/Kaisa_18883878.mp3'] = new Audio('experiment_samples/Kaisa_18883878.mp3');
+audioFiles['experiment_samples/Kaisa_18883885.mp3'] = new Audio('experiment_samples/Kaisa_18883885.mp3');
+audioFiles['experiment_samples/Kaisa_18883888.mp3'] = new Audio('experiment_samples/Kaisa_18883888.mp3');
+audioFiles['experiment_samples/Kaisa_18883899.mp3'] = new Audio('experiment_samples/Kaisa_18883899.mp3');
+audioFiles['experiment_samples/Kaisa_18883906.mp3'] = new Audio('experiment_samples/Kaisa_18883906.mp3');
+audioFiles['experiment_samples/Kaisa_18883924.mp3'] = new Audio('experiment_samples/Kaisa_18883924.mp3');
+audioFiles['experiment_samples/Kaisa_18884479.mp3'] = new Audio('experiment_samples/Kaisa_18884479.mp3');
+audioFiles['experiment_samples/Kaisa_18884484.mp3'] = new Audio('experiment_samples/Kaisa_18884484.mp3');
+audioFiles['experiment_samples/Kaisa_18884486.mp3'] = new Audio('experiment_samples/Kaisa_18884486.mp3');
+audioFiles['experiment_samples/Kaisa_18884491.mp3'] = new Audio('experiment_samples/Kaisa_18884491.mp3');
+</script>
