@@ -1,0 +1,34 @@
+<head>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  
+  <body>
+    <div id="myDiv" style:width: 100%><!-- Plotly chart will be drawn inside this DIV --></div>
+    <script>
+      <!-- JAVASCRIPT CODE GOES HERE -->
+        var audioToPlay = new Audio('experiment_samples/ED_anchor.mp3');
+        var myPlot = document.getElementById('myDiv'),
+            d3 = Plotly.d3,
+            N = 16,
+            x = d3.range(N),
+            y = d3.range(N).map( d3.random.normal() ),
+            data = [{ x: x, y: y, type:'scatter',
+                    mode:'markers', marker:{size:16}}],
+            layout = {
+                hovermode:'closest',
+                title:'Click on points to play'
+            };
+
+        Plotly.newPlot('myDiv', data, layout, {showSendToCloud: true});
+
+        myPlot.on('plotly_unhover', function(data){
+            audioToPlay.pause();
+            audioToPlay.currentTime = 0;
+        })
+
+        myPlot.on('plotly_click', function(data){
+            audioToPlay.play();
+        });
+    </script>
+  </body>
