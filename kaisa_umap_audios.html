@@ -213,7 +213,7 @@
                     var fileId = Object.keys(fileIdMap)[pointIndex];
                     var fileName = fileIdMap[fileId];
                     // var audioURL = 'https://drive.google.com/uc?id=' + fileId;
-                    var audioURL = 'https://drive.google.com/uc?id=' + fileId;
+                    var audioURL = fileId;
                     if (audioURL) {
                         var audio = document.getElementById('audio-player');
                         // Set the source of the audio player to the Google Drive URL
