@@ -220,14 +220,14 @@
       Plotly.newPlot('myDiv', data, layout, {showSendToCloud: !0});
 
       myPlot.on('plotly_unhover', function(data){
-          // log the data of the point you are hovering
-          console.log(data.points[0].customdata[0]);
           var audioToPlay = new Audio(data.points[0].customdata[0]);
           audioToPlay.pause();
           audioToPlay.currentTime = 0;
       })
 
       myPlot.on('plotly_click', function(data){
+          // log the data of the point you are playing
+          console.log(data.points[0].customdata[0]);
           var audioToPlay = new Audio(data.points[0].customdata[0]);
           audioToPlay.play();
       });
