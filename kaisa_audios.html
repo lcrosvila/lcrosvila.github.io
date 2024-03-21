@@ -219,16 +219,21 @@
 
       Plotly.newPlot('myDiv', data, layout, {showSendToCloud: !0});
 
-      myPlot.on('plotly_unhover', function(data){
-          var audioToPlay = new Audio(data.points[0].customdata[0]);
-          audioToPlay.pause();
-          audioToPlay.currentTime = 0;
-      })
+      var myPlot = document.getElementById('myDiv');
 
-      myPlot.on('plotly_click', function(data){
-          // log the data of the point you are playing
-          console.log(data.points[0].customdata[0]);
-          var audioToPlay = new Audio(data.points[0].customdata[0]);
+      myPlot.on('plotly_unhover', function () {
+          if (audioToPlay) {
+              audioToPlay.pause();
+              audioToPlay.currentTime = 0;
+          }
+      });
+
+      var audioToPlay;
+
+      myPlot.on('plotly_click', function (data) {
+          var audioFile = data.points[0].customdata[0];
+          console.log(audioFile);
+          audioToPlay = new Audio(audioFile);
           audioToPlay.play();
       });
   </script>
