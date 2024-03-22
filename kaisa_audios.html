@@ -231,7 +231,7 @@
       var audioToPlay;
 
       myPlot.on('plotly_click', function (data) {
-          var directory = "http://130.237.3.110:8888/static/experiment_samples/Kaisa_";
+          var directory = "https://kth-my.sharepoint.com/personal/lcros_ug_kth_se/Documents/Kaisa_";
           var audioFile = directory + data.points[0].customdata[0];
           console.log(audioFile);
           audioToPlay = new Audio(audioFile);
