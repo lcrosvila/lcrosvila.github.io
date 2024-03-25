@@ -231,7 +231,7 @@
       var audioToPlay;
 
       myPlot.on('plotly_click', function (data) {
-          var directory = "experiment_samples/Kaisa_";
+          var directory = "https://127.0.0.1:8888/static/experiment_samples/Kaisa_";
           var audioFile = directory + data.points[0].customdata[0];
           console.log(audioFile);
           audioToPlay = new Audio(audioFile);
