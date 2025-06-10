@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker from Photo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .color-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        #imageContainer {
+            position: relative;
+            max-width: 100%;
+            margin: 0 auto;
+            cursor: crosshair;
+        }
+        
+        #imageDisplay {
+            max-width: 100%;
+            max-height: 70vh;
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .instructions {
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 400px;
+            margin: 20px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700 mb-2">Pixel Color Picker</h1>
+            <p class="text-gray-600">Click anywhere on your photo to detect the color</p>
+        </header>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
+            <div id="cameraSection" class="text-center mb-6">
+                <button id="openCameraBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full inline-flex items-center mr-4 mb-4 sm:mb-0 transition duration-200">
+                    <i class="fas fa-camera mr-2"></i> Open Camera
+                </button>
+                <label for="fileInput" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded-full inline-flex items-center cursor-pointer transition duration-200">
+                    <i class="fas fa-upload mr-2"></i> Upload Image
+                </label>
+                <input type="file" id="fileInput" accept="image/*" capture="environment">
+            </div>
+            
+            <div class="instructions text-center text-gray-700 mb-6">
+                <p class="mb-2"><i class="fas fa-info-circle text-indigo-500 mr-2"></i> <strong>How to use:</strong></p>
+                <p>1. Take a photo or upload an existing one</p>
+                <p>2. Tap/click anywhere on the image to detect the color</p>
+                <p>3. The color name and hex code will appear below</p>
+            </div>
+            
+            <div id="imageContainer" class="hidden mb-6">
+                <img id="imageDisplay" alt="Your photo will appear here">
+            </div>
+            
+            <div id="resultSection" class="hidden text-center p-6 bg-gray-50 rounded-lg">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Detected Color</h2>
+                <div class="flex items-center justify-center space-x-6 mb-4">
+                    <div id="colorSample" class="color-dot"></div>
+                    <div>
+                        <p id="colorName" class="text-2xl font-bold text-gray-800"></p>
+                        <p id="colorHex" class="text-gray-500"></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 max-w-md mx-auto mt-6">
+                    <div class="bg-indigo-50 p-3 rounded-lg">
+                        <p class="text-xs text-indigo-500 font-semibold">RGB</p>
+                        <p id="colorRgb" class="text-sm"></p>
+                    </div>
+                    <div class="bg-indigo-50 p-3 rounded-lg">
+                        <p class="text-xs text-indigo-500 font-semibold">HSL</p>
+                        <p id="colorHsl" class="text-sm"></p>
+                    </div>
+                    <div class="bg-indigo-50 p-3 rounded-lg">
+                        <p class="text-xs text-indigo-500 font-semibold">Position</p>
+                        <p id="clickPosition" class="text-sm"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="text-center py-6 text-gray-500 text-sm">
+        <p>Made with <i class="fas fa-heart text-pink-500"></i> for color enthusiasts</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const openCameraBtn = document.getElementById('openCameraBtn');
+        const fileInput = document.getElementById('fileInput');
+        const imageContainer = document.getElementById('imageContainer');
+        const imageDisplay = document.getElementById('imageDisplay');
+        const resultSection = document.getElementById('resultSection');
+        const colorSample = document.getElementById('colorSample');
+        const colorName = document.getElementById('colorName');
+        const colorHex = document.getElementById('colorHex');
+        const colorRgb = document.getElementById('colorRgb');
+        const colorHsl = document.getElementById('colorHsl');
+        const clickPosition = document.getElementById('clickPosition');
+        
+        // Color name dictionary
+        const colorNames = {
+            // Red variants
+            "#ff0000": "Red",
+            "#cd5c5c": "Indian Red",
+            "#dc143c": "Crimson",
+            "#b22222": "Fire Brick",
+            "#8b0000": "Dark Red",
+            
+            // Pink variants
+            "#ffc0cb": "Pink",
+            "#ff69b4": "Hot Pink",
+            "#db7093": "Pale Violet Red",
+            "#c71585": "Medium Violet Red",
+            "#ff1493": "Deep Pink",
+            
+            // Orange variants
+            "#ffa500": "Orange",
+            "#ff8c00": "Dark Orange",
+            "#ff7f50": "Coral",
+            "#ff6347": "Tomato",
+            "#ff4500": "Orange Red",
+            
+            // Yellow variants
+            "#ffff00": "Yellow",
+            "#ffd700": "Gold",
+            "#f0e68c": "Khaki",
+            "#bdb76b": "Dark Khaki",
+            "#d8b909": "Mustard",
+            
+            // Purple variants
+            "#800080": "Purple",
+            "#9370db": "Medium Purple",
+            "#663399": "Rebecca Purple",
+            "#8a2be2": "Blue Violet",
+            "#9400d3": "Dark Violet",
+            
+            // Green variants
+            "#008000": "Green",
+            "#228b22": "Forest Green",
+            "#006400": "Dark Green",
+            "#2e8b57": "Sea Green",
+            "#3cb371": "Medium Sea Green",
+            "#20b2aa": "Light Sea Green",
+            "#7fffd4": "Aquamarine",
+            
+            // Blue variants
+            "#0000ff": "Blue",
+            "#1e90ff": "Dodger Blue",
+            "#00bfff": "Deep Sky Blue",
+            "#4169e1": "Royal Blue",
+            "#00008b": "Dark Blue",
+            "#000080": "Navy",
+            "#191970": "Midnight Blue",
+            
+            // Brown variants
+            "#a52a2a": "Brown",
+            "#8b4513": "Saddle Brown",
+            "#d2691e": "Chocolate",
+            "#cd853f": "Peru",
+            "#f4a460": "Sandy Brown",
+            "#deb887": "Burly Wood",
+            
+            // White variants
+            "#ffffff": "White",
+            "#fffafa": "Snow",
+            "#f5f5f5": "White Smoke",
+            "#dcdcdc": "Gainsboro",
+            "#d3d3d3": "Light Gray",
+            
+            // Gray/Black variants
+            "#808080": "Gray",
+            "#696969": "Dim Gray",
+            "#2f4f4f": "Dark Slate Gray",
+            "#000000": "Black",
+            
+            // Add more colors as needed
+        };
+        
+        // Open camera when button is clicked
+        openCameraBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // Handle file selection or photo capture
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    imageDisplay.src = event.target.result;
+                    imageContainer.classList.remove('hidden');
+                    resultSection.classList.add('hidden');
+                    addImageClickListener();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Add click listener to image
+        function addImageClickListener() {
+            imageDisplay.addEventListener('click', (e) => {
+                // Create a canvas to analyze the clicked pixel
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = imageDisplay.width;
+                canvas.height = imageDisplay.height;
+                ctx.drawImage(imageDisplay, 0, 0, imageDisplay.width, imageDisplay.height);
+                
+                // Get the coordinates of the click relative to the image
+                const rect = imageDisplay.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const pixel = ctx.getImageData(x, y, 1, 1).data;
+                
+                // Convert to HEX
+                const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+                
+                // Convert to HSL
+                const hsl = rgbToHsl(pixel[0], pixel[1], pixel[2]);
+                
+                // Find color name (approximate match if exact not found)
+                let name = getColorName(hex);
+                
+                // Update UI with results
+                colorSample.style.backgroundColor = hex;
+                colorName.textContent = name;
+                colorHex.textContent = hex;
+                colorRgb.textContent = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+                colorHsl.textContent = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+                clickPosition.textContent = `X: ${Math.round(x)}, Y: ${Math.round(y)}`;
+                
+                // Show results
+                resultSection.classList.remove('hidden');
+                
+                // Smooth scroll to results
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+        
+        // Helper function to convert RGB to HEX
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+        
+        // Helper function to convert RGB to HSL
+        function rgbToHsl(r, g, b) {
+            r /= 255, g /= 255, b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max == min) {
+                h = s = 0; // achromatic
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h *= 60;
+            }
+
+            return [Math.round(h), Math.round(s * 100), Math.round(l * 100)];
+        }
+        
+        // Find closest named color (if exact match not found)
+        function getColorName(hex) {
+            // Check for exact match first
+            const exactMatch = colorNames[hex.toLowerCase()];
+            if (exactMatch) return exactMatch;
+            
+            // If no exact match, find the closest named color
+            const rgb1 = hexToRgb(hex);
+            let closestColor = "";
+            let minDistance = Infinity;
+            
+            for (const [hexValue, name] of Object.entries(colorNames)) {
+                const rgb2 = hexToRgb(hexValue);
+                const distance = colorDistance(rgb1, rgb2);
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestColor = name;
+                }
+            }
+            
+            return closestColor || "Unknown Color";
+        }
+        
+        // Helper to convert HEX to RGB
+        function hexToRgb(hex) {
+            const r = parseInt(hex.substring(1, 3), 16);
+            const g = parseInt(hex.substring(3, 5), 16);
+            const b = parseInt(hex.substring(5, 7), 16);
+            return [r, g, b];
+        }
+        
+        // Calculate color distance (Euclidean in RGB space)
+        function colorDistance(rgb1, rgb2) {
+            return Math.sqrt(
+                Math.pow(rgb2[0] - rgb1[0], 2) +
+                Math.pow(rgb2[1] - rgb1[1], 2) +
+                Math.pow(rgb2[2] - rgb1[2], 2)
+            );
+        }
+    </script>
+</body>
+</html>
